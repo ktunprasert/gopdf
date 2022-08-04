@@ -10,8 +10,23 @@ services:
       - .:/usr/src/app
     environment:
       GOTENBERG_URL: http://gotenberg:3000
+      COUCHDB_URL: http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@couchdb:5984
+      COUCHDB_TABLE: store
 
   gotenberg:
     image: gotenberg/gotenberg:7
     ports:
       - "3000:3000"
+
+  couchdb:
+    image: couchdb:3.2.2
+    container_name: gopdf-couchdb
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: ${COUCHDB_USER}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+      COUCHDB_SECRET: ${COUCHDB_SECRET}
+    volumes:
+      - ./couchdb:/opt/couchdb/data
+
