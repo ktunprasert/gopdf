@@ -6,7 +6,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/ktunprasert/gopdf/gotenberg"
+	"github.com/ktunprasert/gopdf/server/routes"
 )
 
 type Server struct{}
@@ -62,12 +64,25 @@ func (s *Server) generatePdf(w http.ResponseWriter, req *http.Request) {
 	w.Write(fileBytes)
 }
 
-func (s *Server) setupRoutes() {
-	http.HandleFunc("/gotenberg", s.generatePdf)
-	// http.HandleFunc("/hello", s.hello)
-	// http.HandleFunc("/template", s.template)
-	http.HandleFunc("/", s.index)
+func (s *Server) setupRoutes(router *mux.Router) {
+	router.HandleFunc("/gotenberg", s.generatePdf)
 
+    router.HandleFunc("/tenant/{id}/", routes.GetTenant).Methods("GET")
+    router.HandleFunc("/tenant/{id}/", routes.DeleteTenant).Methods("DELETE")
+    router.HandleFunc("/tenant/{id}/", routes.UpdateTenant).Methods("PUT")
+    router.HandleFunc("/tenant/", routes.ListTenant).Methods("GET")
+    router.HandleFunc("/tenant/", routes.CreateTenant).Methods("POST")
+    router.HandleFunc("/tenant/{tenantId}/invoices/", routes.ListInvoice).Methods("GET")
+
+    router.HandleFunc("/invoice/{id}/", routes.GetInvoice).Methods("GET")
+    router.HandleFunc("/invoice/{id}/", routes.DeleteInvoice).Methods("DELETE")
+    router.HandleFunc("/invoice/{id}/", routes.UpdateInvoice).Methods("PUT")
+    router.HandleFunc("/invoice/", routes.CreateInvoice).Methods("POST")
+
+    router.HandleFunc("/", s.index)
+}
+
+func (s *Server) setupStatic() {
 	fs := http.FileServer(http.Dir("server/static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
@@ -76,7 +91,10 @@ func (s *Server) setupRoutes() {
 }
 
 func (s *Server) Start() {
-	s.setupRoutes()
+    router := mux.NewRouter()
+	s.setupRoutes(router)
+	s.setupStatic()
 	fmt.Println("Listening at localhost:8090...")
-	http.ListenAndServe(":8090", nil)
+
+	http.ListenAndServe(":8090", router)
 }
