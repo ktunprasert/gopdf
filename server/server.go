@@ -80,21 +80,23 @@ func (s *Server) setupRoutes(router *mux.Router) {
     router.HandleFunc("/invoice/", routes.CreateInvoice).Methods("POST")
 
     router.HandleFunc("/upload/", routes.HandleUpload).Methods("POST")
+
     router.HandleFunc("/", s.index)
 }
 
-func (s *Server) setupStatic() {
-	fs := http.FileServer(http.Dir("server/static/"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+func (s *Server) setupFileServers(router *mux.Router) {
+	static := http.FileServer(http.Dir("server/static/"))
+    uploads := http.FileServer(http.Dir("uploads"))
 
-    uploads := http.FileServer(http.Dir("server/uploads"))
-    http.Handle("/uploads/", http.StripPrefix("/uploads/", uploads))
+    router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", static))
+    router.PathPrefix("/uploads/").Handler(http.StripPrefix("/uploads/", uploads))
 }
 
 func (s *Server) Start() {
     router := mux.NewRouter()
 	s.setupRoutes(router)
-	s.setupStatic()
+	s.setupFileServers(router)
+
 	fmt.Println("Listening at localhost:8090...")
 
 	http.ListenAndServe(":8090", router)
