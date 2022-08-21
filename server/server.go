@@ -65,7 +65,7 @@ func (s *Server) generatePdf(w http.ResponseWriter, req *http.Request) {
 }
 
 func (s *Server) setupRoutes(router *mux.Router) {
-	router.HandleFunc("/gotenberg", s.generatePdf)
+	router.HandleFunc("/gotenberg/", s.generatePdf)
 
     router.HandleFunc("/tenant/{id}/", routes.GetTenant).Methods("GET")
     router.HandleFunc("/tenant/{id}/", routes.DeleteTenant).Methods("DELETE")
@@ -79,6 +79,7 @@ func (s *Server) setupRoutes(router *mux.Router) {
     router.HandleFunc("/invoice/{id}/", routes.UpdateInvoice).Methods("PUT")
     router.HandleFunc("/invoice/", routes.CreateInvoice).Methods("POST")
 
+    router.HandleFunc("/upload/", routes.HandleUpload).Methods("POST")
     router.HandleFunc("/", s.index)
 }
 
