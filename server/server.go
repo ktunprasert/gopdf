@@ -47,17 +47,17 @@ func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 }
 
 func (s *Server) generatePdf(w http.ResponseWriter, req *http.Request) {
-    // Params are as follows:
-    // PDF_URL
-    // FILE_NAME
+	// Params are as follows:
+	// PDF_URL
+	// FILE_NAME
 	fmt.Println("/gotenberg reached")
-    fmt.Printf("%+v\n", req)
+	fmt.Printf("%+v\n", req)
 
-    client := gotenberg.Client{}
-    fileBytes, err := client.GetPdfStream("https://example.com")
-    if err != nil {
-        log.Fatal(err)
-    }
+	client := gotenberg.Client{}
+	fileBytes, err := client.GetPdfStream("https://example.com")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", `attachment; filename="example.pdf"`)
@@ -67,33 +67,38 @@ func (s *Server) generatePdf(w http.ResponseWriter, req *http.Request) {
 func (s *Server) setupRoutes(router *mux.Router) {
 	router.HandleFunc("/gotenberg/", s.generatePdf)
 
-    router.HandleFunc("/tenant/{id}/", routes.GetTenant).Methods("GET")
-    router.HandleFunc("/tenant/{id}/", routes.DeleteTenant).Methods("DELETE")
-    router.HandleFunc("/tenant/{id}/", routes.UpdateTenant).Methods("PUT")
-    router.HandleFunc("/tenant/", routes.ListTenant).Methods("GET")
-    router.HandleFunc("/tenant/", routes.CreateTenant).Methods("POST")
-    router.HandleFunc("/tenant/{tenantId}/invoices/", routes.ListInvoice).Methods("GET")
+	router.HandleFunc("/", s.index)
+}
 
-    router.HandleFunc("/invoice/{id}/", routes.GetInvoice).Methods("GET")
-    router.HandleFunc("/invoice/{id}/", routes.DeleteInvoice).Methods("DELETE")
-    router.HandleFunc("/invoice/{id}/", routes.UpdateInvoice).Methods("PUT")
-    router.HandleFunc("/invoice/", routes.CreateInvoice).Methods("POST")
+func (s *Server) setupApiRoutes(router *mux.Router) {
+	apiRouter := router.PathPrefix("/api/").Subrouter()
 
-    router.HandleFunc("/upload/", routes.HandleUpload).Methods("POST")
+	apiRouter.HandleFunc("/tenant/{id}/", routes.GetTenant).Methods("GET")
+	apiRouter.HandleFunc("/tenant/{id}/", routes.DeleteTenant).Methods("DELETE")
+	apiRouter.HandleFunc("/tenant/{id}/", routes.UpdateTenant).Methods("PUT")
+	apiRouter.HandleFunc("/tenant/", routes.ListTenant).Methods("GET")
+	apiRouter.HandleFunc("/tenant/", routes.CreateTenant).Methods("POST")
+	apiRouter.HandleFunc("/tenant/{tenantId}/invoices/", routes.ListInvoice).Methods("GET")
 
-    router.HandleFunc("/", s.index)
+	apiRouter.HandleFunc("/invoice/{id}/", routes.GetInvoice).Methods("GET")
+	apiRouter.HandleFunc("/invoice/{id}/", routes.DeleteInvoice).Methods("DELETE")
+	apiRouter.HandleFunc("/invoice/{id}/", routes.UpdateInvoice).Methods("PUT")
+	apiRouter.HandleFunc("/invoice/", routes.CreateInvoice).Methods("POST")
+
+	apiRouter.HandleFunc("/upload/", routes.HandleUpload).Methods("POST")
 }
 
 func (s *Server) setupFileServers(router *mux.Router) {
 	static := http.FileServer(http.Dir("server/static/"))
-    uploads := http.FileServer(http.Dir("uploads"))
+	uploads := http.FileServer(http.Dir("uploads"))
 
-    router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", static))
-    router.PathPrefix("/uploads/").Handler(http.StripPrefix("/uploads/", uploads))
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", static))
+	router.PathPrefix("/uploads/").Handler(http.StripPrefix("/uploads/", uploads))
 }
 
 func (s *Server) Start() {
-    router := mux.NewRouter()
+	router := mux.NewRouter()
+	s.setupApiRoutes(router)
 	s.setupRoutes(router)
 	s.setupFileServers(router)
 
