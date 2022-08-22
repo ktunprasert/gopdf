@@ -1,4 +1,4 @@
-package routes
+package api
 
 import (
 	"encoding/json"
@@ -9,11 +9,11 @@ import (
 	"github.com/ktunprasert/gopdf/domains"
 )
 
-func GetInvoice(w http.ResponseWriter, r *http.Request) {
+func GetTenant(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	invoiceId := vars["id"]
-	repo := repository.NewInvoiceRepository()
-	invoice, err := repo.Get(invoiceId)
+	tenantId := vars["id"]
+	repo := repository.NewTenantRepository()
+	tenant, err := repo.Get("tenant:" + tenantId)
 
 	if err != nil {
 		errRes := handleRepoError(err)
@@ -25,20 +25,20 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(
-		domains.JsonResponse[*domains.Invoice]{
+		domains.JsonResponse[*domains.Tenant]{
 			Success: true,
 			Message: "",
-			Data:    invoice,
+			Data:    tenant,
 		},
 	)
 }
 
-func CreateInvoice(w http.ResponseWriter, r *http.Request) {
-	var invoice *domains.Invoice
-	json.NewDecoder(r.Body).Decode(&invoice)
+func CreateTenant(w http.ResponseWriter, r *http.Request) {
+	var tenant *domains.Tenant
+	json.NewDecoder(r.Body).Decode(&tenant)
 
-	repo := repository.NewInvoiceRepository()
-	invoice, err := repo.Create(invoice)
+	repo := repository.NewTenantRepository()
+	tenant, err := repo.Create(tenant)
 	if err != nil {
 		errRes := handleRepoError(err)
 		if errRes != nil {
@@ -49,20 +49,17 @@ func CreateInvoice(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(
-		domains.JsonResponse[*domains.Invoice]{
+		domains.JsonResponse[*domains.Tenant]{
 			Success: true,
 			Message: "",
-			Data:    invoice,
+			Data:    tenant,
 		},
 	)
 }
 
-func ListInvoice(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	tenantId := vars["tenantId"]
-
-	repo := repository.NewInvoiceRepository()
-	invoices, err := repo.List(tenantId)
+func ListTenant(w http.ResponseWriter, r *http.Request) {
+	repo := repository.NewTenantRepository()
+	tenants, err := repo.List()
 	if err != nil {
 		errRes := handleRepoError(err)
 		if errRes != nil {
@@ -76,16 +73,16 @@ func ListInvoice(w http.ResponseWriter, r *http.Request) {
 		domains.JsonResponse[[]string]{
 			Success: true,
 			Message: "",
-			Data:    invoices,
+			Data:    tenants,
 		},
 	)
 }
 
-func DeleteInvoice(w http.ResponseWriter, r *http.Request) {
+func DeleteTenant(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	invoiceId := vars["id"]
-	repo := repository.NewInvoiceRepository()
-	err := repo.Delete(invoiceId)
+	tenantId := vars["id"]
+	repo := repository.NewTenantRepository()
+	err := repo.Delete("tenant:" + tenantId)
 	if err != nil {
 		errRes := handleRepoError(err)
 		if errRes != nil {
@@ -104,13 +101,13 @@ func DeleteInvoice(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func UpdateInvoice(w http.ResponseWriter, r *http.Request) {
-	var invoice *domains.Invoice
-	json.NewDecoder(r.Body).Decode(&invoice)
+func UpdateTenant(w http.ResponseWriter, r *http.Request) {
+	var tenant *domains.Tenant
+	json.NewDecoder(r.Body).Decode(&tenant)
 
-	repo := repository.NewInvoiceRepository()
+	repo := repository.NewTenantRepository()
 
-	fetchedInvoice, err := repo.Get(invoice.Id)
+	fetchedTenant, err := repo.Get(tenant.Id)
 	if err != nil {
 		errRes := handleRepoError(err)
 		if errRes != nil {
@@ -119,9 +116,9 @@ func UpdateInvoice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	invoice.Rev = fetchedInvoice.Rev
+	tenant.Rev = fetchedTenant.Rev
 
-	invoice, err = repo.Update(invoice)
+	tenant, err = repo.Update(tenant)
 	if err != nil {
 		errRes := handleRepoError(err)
 		if errRes != nil {
@@ -132,10 +129,10 @@ func UpdateInvoice(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(
-		domains.JsonResponse[*domains.Invoice]{
+		domains.JsonResponse[*domains.Tenant]{
 			Success: true,
 			Message: "",
-			Data:    invoice,
+			Data:    tenant,
 		},
 	)
 }

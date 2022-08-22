@@ -1,18 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>{{.PageTitle}}</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="static/style.css" rel="stylesheet" />
-        <style>
-            body {
-                font-family: Iosevka;
-            }
-        </style>
-    <body>
-    </head>
-        <p>I am a body -> dynamic content begins from this point onwards</p>
-        {{.BodyContent}}
-    </body>
-</html>
+{{define "title"}}
+<title>GoPDF Invoice Geneator - Tenants</title>
+{{end}}
+
+{{define "body"}}
+<div class="container content">
+    <div class="columns">
+        <div class="column">
+            <p><b>List of tenants</b>
+            <ul>
+                {{range .Tenants}}
+                <li><a href="/{{.}}">{{.}}</a></li>
+                {{end}}
+            </ul>
+            </p>
+        </div>
+        <div class="column">
+            <b>New Tenant</b>
+            <form method="POST">
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input class="input" name="name" type="text" placeholder="e.g Alex Smith">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Address1</label>
+                    <div class="control">
+                        <input class="input" name="address1" type="text">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Address2</label>
+                    <div class="control">
+                        <input class="input" name="address2" type="text">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Telephone</label>
+                    <div class="control">
+                        <input class="input" name="telephone" type="text">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Taxcode</label>
+                    <div class="control">
+                        <input class="input" name="taxcode" type="text">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">BankAddress</label>
+                    <div class="control">
+                        <input class="input" name="bankaddress" type="text">
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-link">Submit</button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-link is-light">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{{end}}
