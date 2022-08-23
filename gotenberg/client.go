@@ -22,8 +22,26 @@ func (c *Client) GetPdfStream(url string) ([]byte, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
-	w, _ := writer.CreateFormField("url")
-	io.Copy(w, strings.NewReader(url))
+	urlField, _ := writer.CreateFormField("url")
+	io.Copy(urlField, strings.NewReader(url))
+
+	cssPageSizeField, _ := writer.CreateFormField("preferCssPageSize")
+	io.Copy(cssPageSizeField, strings.NewReader("true"))
+
+
+    margin := "0.3"
+	marginTopField, _ := writer.CreateFormField("marginTop")
+	io.Copy(marginTopField, strings.NewReader(margin))
+
+	marginBottomField, _ := writer.CreateFormField("marginBottom")
+	io.Copy(marginBottomField, strings.NewReader(margin))
+
+	marginLeftField, _ := writer.CreateFormField("marginLeft")
+	io.Copy(marginLeftField, strings.NewReader(margin))
+
+	marginRightField, _ := writer.CreateFormField("marginRight")
+	io.Copy(marginRightField, strings.NewReader(margin))
+
 	writer.Close()
 
 	pdfRequest, _ := http.NewRequest("POST", BASE_URL+PATH, bytes.NewReader(body.Bytes()))
