@@ -11,8 +11,7 @@ import (
 )
 
 var (
-	GOTENBERG_URL = "http://gotenberg:3000/forms/chromium/convert/url"
-	BASE_URL      = os.Getenv("GOTENBERG_URL")
+	GOTENBERG_URL = os.Getenv("GOTENBERG_URL")
 	PATH          = "/forms/chromium/convert/url"
 )
 
@@ -28,8 +27,7 @@ func (c *Client) GetPdfStream(url string) ([]byte, error) {
 	cssPageSizeField, _ := writer.CreateFormField("preferCssPageSize")
 	io.Copy(cssPageSizeField, strings.NewReader("true"))
 
-
-    margin := "0.3"
+	margin := "0.3"
 	marginTopField, _ := writer.CreateFormField("marginTop")
 	io.Copy(marginTopField, strings.NewReader(margin))
 
@@ -42,9 +40,12 @@ func (c *Client) GetPdfStream(url string) ([]byte, error) {
 	marginRightField, _ := writer.CreateFormField("marginRight")
 	io.Copy(marginRightField, strings.NewReader(margin))
 
+	landscapeField, _ := writer.CreateFormField("landscape")
+	io.Copy(landscapeField, strings.NewReader("true"))
+
 	writer.Close()
 
-	pdfRequest, _ := http.NewRequest("POST", BASE_URL+PATH, bytes.NewReader(body.Bytes()))
+	pdfRequest, _ := http.NewRequest("POST", GOTENBERG_URL+PATH, bytes.NewReader(body.Bytes()))
 	pdfRequest.Header.Set("Content-Type", writer.FormDataContentType())
 
 	client := &http.Client{}
