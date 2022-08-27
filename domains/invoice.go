@@ -26,6 +26,7 @@ type Invoice struct {
 	DueDate    string   `json:"due_date"`
 	PONumber   string   `json:"po_number"`
 	Customer   Customer `json:"customer"`
+	Notes      string   `json:"notes"`
 
 	ContactName      string `json:"contact_name"`
 	ContactTelephone string `json:"contact_telephone"`

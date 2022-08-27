@@ -10,3 +10,9 @@ type PartitionResponse struct {
 	Offset    int           `json:"offset"`
 	Rows      []IdKeyObject `json:"rows,omitempty"`
 }
+
+type EntityKeyObject struct {
+	CompositeKey string
+	Entity       string
+	Id           string
+}
