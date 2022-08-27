@@ -14,6 +14,7 @@ type Server struct{}
 func (s *Server) setupRoutes(router *mux.Router) {
 	router.HandleFunc("/gotenberg/", routes.GeneratePdf)
 
+    router.HandleFunc("/tenant/{tenantId}/", routes.TenantView)
 	router.HandleFunc("/", routes.Index)
 }
 

@@ -8,8 +8,8 @@
         <div class="column">
             <p><b>List of tenants</b>
             <ul>
-                {{range .Tenants}}
-                <li><a href="/{{.}}">{{.}}</a></li>
+                {{range .ExtractedKeys}}
+                <li><a href="/{{.Entity}}/{{.Id}}/">{{.CompositeKey}}</a></li>
                 {{end}}
             </ul>
             </p>
