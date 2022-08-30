@@ -1,0 +1,215 @@
+{{define "title"}}
+<title> Invoice {{.Invoice.InvoiceId}} - {{.TenantId}}</title>
+<link rel="stylesheet" href="/static/invoice.css">
+{{ if .Tenant.BackgroundColor}}
+<style>
+:root {
+    --tenantBg: {{.Tenant.BackgroundColor}};
+}
+{{end}}
+</style>
+{{end}}
+
+{{define "doc_title"}}
+<div class="column has-text-right p-1">
+    <div class="text p-4">
+        <h2 class="title is-5">
+            {{.ThaiTitle}}
+            <br>
+            {{.EnglishTitle}}
+        </h2>
+        <h3 class="subtitle is-5 mb-0">(สำเนา)</h2>
+    </div>
+</div>
+{{end}}
+
+
+{{define "original_invoice"}}
+<div class="content mb-0">
+    <div class="logo_row row columns is-vcentered is-gapless">
+        <div class="column logo is-4">
+            <img src="{{$.Tenant.Logo}}">
+        </div>
+        <div class="column has-text-right p-1">
+            <div class="text p-4">
+                <h2 class="title is-5">
+                    ใบเสร็จรับเงิน/ใบกำกับภาษี 
+                    <br>
+                    RECEIVE/TAXINVOICE 
+                </h2>
+                <h3 class="subtitle is-5 mb-0"></h2>
+            </div>
+        </div>
+    </div>
+    {{template "invoice_content" .}}
+</div>
+{{end}}
+
+{{define "copy_invoice"}}
+<div class="content mb-0">
+    <div class="logo_row row columns is-vcentered is-gapless">
+        <div class="column logo is-4">
+            <img src="{{$.Tenant.Logo}}">
+        </div>
+        <div class="column has-text-right p-1">
+            <div class="text p-4">
+                <h2 class="title is-5">
+                    สำเนาใบเสร็จรับเงิน/สำเนาใบกำกับภาษี
+                    <br>
+                    COPY RECEIVE/COPY TAXINVOICE
+                </h2>
+                <h3 class="subtitle is-5 mb-0">(สำเนา)</h2>
+            </div>
+        </div>
+    </div>
+    {{template "invoice_content" .}}
+</div>
+{{end}}
+
+{{define "invoice_content"}}
+<div class="content mb-0">
+    <div class="columns row m-1">
+        <div class="column">
+            <h2 class="title is-5 mb-1">{{$.Tenant.Name}}</h2>
+            <p>
+            {{.Tenant.Address1}}<br>
+            {{.Tenant.Address2}}<br>
+
+            {{if .Tenant.Telephone}}
+            โทร {{.Tenant.Telephone}}<br>
+            {{end}}
+
+            เลขประจำตัวผู้เสียภาษี {{$.Tenant.Taxcode}}<br>
+            </p>
+            <h2 class="title is-5 mb-1">Customer / ลูกค้า</h2>
+            <p>
+            {{$.Invoice.Customer.Name}}<br>
+            {{$.Invoice.Customer.Address1}}<br>
+            {{$.Invoice.Customer.Address2}}<br>
+            {{if $.Invoice.Customer.Telephone}}
+            โทร {{$.Invoice.Customer.Telephone}}<br>
+            {{end}}
+            </p>
+        </div>
+        <div class="column is-narrow">
+            <table class="table is-narrow details">
+                <tbody>
+                    {{if and (gt $.Pages 1) $.Tenant.MultiplePages}}
+                    <tr>
+                        <td>หน้า </td>
+                        <td class="has-text-weight-bold">{{$.CurrentPage}} / {{$.Pages}}</td>
+                    </tr>
+                    {{end}}
+                    <tr>
+                        <td>เลขที่ No.</td>
+                        <td class="has-text-weight-bold">{{$.Invoice.InvoiceId}}</td>
+                    </tr>
+                    <tr>
+                        <td>วันที่ Date</td>
+                        <td class="has-text-weight-bold">{{$.Invoice.IssuedDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>เงื่อนไขการชำระเงิน</td>
+                        <td class="has-text-weight-bold">{{$.Invoice.Type}}</td>
+                    </tr>
+                    <tr>
+                        <td>ใบสั่งซื้อ P/O No.</td>
+                        <td class="has-text-weight-bold">{{$.Invoice.PONumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>ผู้ติดต่อ</td>
+                        <td>{{$.Invoice.ContactName}}</td>
+                    </tr>
+                    <tr>
+                        <td>เบอร์โทร</td>
+                        <td>{{$.Invoice.ContactTelephone}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <table class="table order is-bordered is-narrow">
+                <caption class="mt-2" align="bottom">
+                    ***กรรมสิทธิ์ในสินค้าจะโอนไปยังท่านเมื่อบริษัทฯได้รับชำระเงินแล้วเท่านั้น***</caption>
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>รหัสสินค้า</th>
+                        <th>รายการ</th>
+                        <th>จำนวน</th>
+                        <th>หน่วยละ</th>
+                        <th>จำนวนเงิน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{$total := var $.Total}}
+                    {{range $i, $v := $.Items}}
+                    {{if ge $i 15}}
+                        {{break}}
+                    {{end}}
+                    <tr>
+                        <td class="has-text-right">{{add $i 1}}</td>
+                        <td class="has-text-right">{{$v.Code}}</td>
+                        <td>{{$v.Description}}</td>
+                        <td class="has-text-right">{{$v.Amount}}</td>
+                        <td class="has-text-right">{{printDecAsFloat $v.Cost}}</td>
+                        <td class="has-text-right">{{printDecAsFloat (mul $v.Amount $v.Cost)}}</td>
+                        {{$total.Set (add $total.Value (mul $v.Amount $v.Cost))}}
+                    </tr>
+                    {{end}}
+
+                    {{if or (eq $.Pages $.CurrentPage) (not $.Tenant.MultiplePages )}}
+                    <tr>
+                        <td colspan="3" rowspan="">{{$.Invoice.Notes}}</td>
+                        <td colspan="2">รวมเงินสุทธิ</td>
+                        <td class="has-text-right">{{printDecAsFloat $total.Value}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" rowspan="2" class="bahttext has-text-centered">
+                            {{bahtThaiText (percentage $total.Value 1.07)}}
+                        </td>
+                        <td colspan="2">ภาษีมูลค่าเพิ่ม</td>
+                        <td class="has-text-right">{{printDecAsFloat (percentage $total.Value 0.07)}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">จำนวนเงินรวมทั้งสิ้น</td>
+                        <td class="has-text-right">{{printDecAsFloat (percentage $total.Value 1.07)}} </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="columns is-centered has-text-centered m-1">
+        <div class="column is-4">
+            <hr class="signature">
+            <p class="mb-0">
+                ผู้มีอำนาจลงนาม                    
+            </p>
+        </div>
+    </div>
+    <div class="columns m-1">
+        <div class="column">
+            <h2 class="title is-6 mb-0">
+                ข้อมูลบัญชีธนาคารเพื่อการโอนเงิน
+            </h2>
+            <p> {{$.Tenant.BankAddress}} </p>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "body"}}
+<div class="grid">
+    {{template "original_invoice" .}}
+    {{template "copy_invoice" .}}
+</div>
+<div class="page-break"></div>
+<div class="grid">
+    {{template "copy_invoice" .}}
+    {{template "copy_invoice" .}}
+</div>
+<div class="page-break"></div>
+{{end}}

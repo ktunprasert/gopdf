@@ -1,0 +1,61 @@
+.content {
+    max-width: 800px !important;
+}
+
+.logo_row {
+    background-color: var(--tenantBg, white);
+}
+
+.row {
+    margin-bottom: 1rem;
+}
+
+.logo img {
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    height: 100%;
+}
+
+:root {
+    font-size: 7pt;
+}
+
+.details td {
+    border: 0 !important;
+    padding: 0 !important;
+    padding-right: 5px !important;
+}
+
+.order .bahttext {
+    vertical-align: middle;
+}
+
+@media all {
+    .page-break {
+        display: none;
+    }
+}
+
+@media print {
+    .page-break {
+        display: block;
+        page-break-before: always;
+        page-break-after: always;
+    }
+}
+.grid {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-gap: 2.5cm;
+}
+
+.signature {
+    background: #000;
+    height: 0.5px;
+    margin: 0;
+}
+
+.line-break {
+    line-break: anywhere;
+}

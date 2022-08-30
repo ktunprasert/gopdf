@@ -16,6 +16,7 @@ func (s *Server) setupRoutes(router *mux.Router) {
 
     router.HandleFunc("/tenant/{tenantId}/", routes.TenantView)
 	router.HandleFunc("/", routes.Index)
+    router.HandleFunc("/tenant/{tenantId}/{invoiceId}/", routes.InvoiceView)
 }
 
 func (s *Server) setupApiRoutes(router *mux.Router) {
@@ -46,9 +47,9 @@ func (s *Server) setupFileServers(router *mux.Router) {
 
 func (s *Server) Start() {
 	router := mux.NewRouter()
+    s.setupFileServers(router)
 	s.setupApiRoutes(router)
 	s.setupRoutes(router)
-	s.setupFileServers(router)
 
 	fmt.Println("Listening at localhost:8090...")
 
