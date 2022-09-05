@@ -32,6 +32,9 @@ func GetTenant(w http.ResponseWriter, r *http.Request) {
 func CreateTenant(w http.ResponseWriter, r *http.Request) {
 	var tenant *domains.Tenant
 	json.NewDecoder(r.Body).Decode(&tenant)
+	if tenant.Id == "" {
+		tenant.Id = "tenant:" + tenant.Name
+	}
 
 	repo := repository.NewTenantRepository()
 	tenant, err := repo.Create(tenant)
