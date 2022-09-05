@@ -16,10 +16,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 	invoice, err := repo.Get(invoiceId)
 
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -40,10 +37,7 @@ func CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	repo := repository.NewInvoiceRepository()
 	invoice, err := repo.Create(invoice)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -64,10 +58,7 @@ func ListInvoice(w http.ResponseWriter, r *http.Request) {
 	repo := repository.NewInvoiceRepository()
 	invoices, err := repo.List(tenantId)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -87,10 +78,7 @@ func DeleteInvoice(w http.ResponseWriter, r *http.Request) {
 	repo := repository.NewInvoiceRepository()
 	err := repo.Delete(invoiceId)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -112,10 +100,7 @@ func UpdateInvoice(w http.ResponseWriter, r *http.Request) {
 
 	fetchedInvoice, err := repo.Get(invoice.Id)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -123,10 +108,7 @@ func UpdateInvoice(w http.ResponseWriter, r *http.Request) {
 
 	invoice, err = repo.Update(invoice)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 

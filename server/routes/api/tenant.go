@@ -14,12 +14,8 @@ func GetTenant(w http.ResponseWriter, r *http.Request) {
 	tenantId := vars["id"]
 	repo := repository.NewTenantRepository()
 	tenant, err := repo.Get("tenant:" + tenantId)
-
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -40,10 +36,7 @@ func CreateTenant(w http.ResponseWriter, r *http.Request) {
 	repo := repository.NewTenantRepository()
 	tenant, err := repo.Create(tenant)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -61,10 +54,7 @@ func ListTenant(w http.ResponseWriter, r *http.Request) {
 	repo := repository.NewTenantRepository()
 	tenants, err := repo.List()
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -84,10 +74,7 @@ func DeleteTenant(w http.ResponseWriter, r *http.Request) {
 	repo := repository.NewTenantRepository()
 	err := repo.Delete("tenant:" + tenantId)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -109,10 +96,7 @@ func UpdateTenant(w http.ResponseWriter, r *http.Request) {
 
 	fetchedTenant, err := repo.Get(tenant.Id)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
@@ -120,10 +104,7 @@ func UpdateTenant(w http.ResponseWriter, r *http.Request) {
 
 	tenant, err = repo.Update(tenant)
 	if err != nil {
-		errRes := handleRepoError(err)
-		if errRes != nil {
-			json.NewEncoder(w).Encode(errRes)
-		}
+		handleRepoError(err, w)
 		return
 	}
 
