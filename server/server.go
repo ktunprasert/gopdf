@@ -15,8 +15,8 @@ func (s *Server) setupRoutes(router *mux.Router) {
 	router.HandleFunc("/gotenberg/", routes.GeneratePdf)
 
     router.HandleFunc("/tenant/{tenantId}/", routes.TenantView)
-	router.HandleFunc("/", routes.Index)
     router.HandleFunc("/tenant/{tenantId}/{invoiceId}/", routes.InvoiceView)
+	router.PathPrefix("/").HandlerFunc(routes.Index)
 }
 
 func (s *Server) setupApiRoutes(router *mux.Router) {

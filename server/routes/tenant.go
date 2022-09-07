@@ -9,14 +9,25 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ktunprasert/gopdf/db"
 	"github.com/ktunprasert/gopdf/db/repository"
+	"github.com/ktunprasert/gopdf/domains"
+)
+
+var (
+	tenant_templates = []string{
+		"server/templates/tenant.html",
+		"server/templates/base.html",
+		"server/templates/forms/tenant-edit.html",
+	}
 )
 
 func TenantView(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tenantId := vars["tenantId"]
 
-	tmpl := template.Must(template.ParseFiles("server/templates/tenant.html", "server/templates/base.html"))
+	tmpl := template.Must(template.ParseFiles(tenant_templates...))
 
+	tenantRepo := repository.NewTenantRepository()
+    tenant, _ := tenantRepo.Get("tenant:"+tenantId)
 	invoiceRepo := repository.NewInvoiceRepository()
 	invoices, err := invoiceRepo.List(tenantId)
 	if err != nil {
@@ -39,10 +50,12 @@ func TenantView(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "base", struct {
 		Invoices []db.EntityKeyObject
 		TenantId string
+		Tenant   *domains.Tenant
 		Title    string
 	}{
 		Invoices: extractedKeys,
 		TenantId: tenantId,
+		Tenant:   tenant,
 		Title:    tenantId,
 	})
 }

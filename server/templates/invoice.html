@@ -1,13 +1,21 @@
 {{define "title"}}
 <title> Invoice {{.Invoice.InvoiceId}} - {{.TenantId}}</title>
 <link rel="stylesheet" href="/static/invoice.css">
-{{ if .Tenant.BackgroundColor}}
 <style>
 :root {
     --tenantBg: {{.Tenant.BackgroundColor}};
 }
-{{end}}
 </style>
+{{end}}
+
+{{define "admin"}}
+{{if not $.Raw}}
+<div class="admin">
+    <a href="/gotenberg/?tenant={{$.Invoice.TenantId}}&invoice={{$.Invoice.InvoiceId}}"
+        download="{{$.Invoice.TenantId}}_{{$.Invoice.InvoiceId}}.pdf" class="button">Download</a>
+</div>
+{{end}}
+
 {{end}}
 
 {{define "doc_title"}}
@@ -23,7 +31,6 @@
 </div>
 {{end}}
 
-
 {{define "original_invoice"}}
 <div class="content mb-0">
     <div class="logo_row row columns is-vcentered is-gapless">
@@ -33,11 +40,12 @@
         <div class="column has-text-right p-1">
             <div class="text p-4">
                 <h2 class="title is-5">
-                    ใบเสร็จรับเงิน/ใบกำกับภาษี 
+                    ใบเสร็จรับเงิน/ใบกำกับภาษี
                     <br>
-                    RECEIVE/TAXINVOICE 
+                    RECEIVE/TAXINVOICE
                 </h2>
-                <h3 class="subtitle is-5 mb-0"></h2>
+                <h3 class="subtitle is-5 mb-0">
+                    </h2>
             </div>
         </div>
     </div>
@@ -58,7 +66,50 @@
                     <br>
                     COPY RECEIVE/COPY TAXINVOICE
                 </h2>
-                <h3 class="subtitle is-5 mb-0">(สำเนา)</h2>
+                <h3 class="subtitle is-5 mb-0">
+                    </h2>
+            </div>
+        </div>
+    </div>
+    {{template "invoice_content" .}}
+</div>
+{{end}}
+
+{{define "finance_invoice"}}
+<div class="content mb-0">
+    <div class="logo_row row columns is-vcentered is-gapless">
+        <div class="column logo is-4">
+            <img src="{{$.Tenant.Logo}}">
+        </div>
+        <div class="column has-text-right p-1">
+            <div class="text p-4">
+                <h2 class="title is-5">
+                    สำเนาใบเสร็จรับเงิน/สำเนาใบกำกับภาษี
+                    <br>
+                    COPY RECEIVE/COPY TAXINVOICE
+                </h2>
+                <h3 class="subtitle is-5 mb-0">การเงิน</h2>
+            </div>
+        </div>
+    </div>
+    {{template "invoice_content" .}}
+</div>
+{{end}}
+
+{{define "accounting_invoice"}}
+<div class="content mb-0">
+    <div class="logo_row row columns is-vcentered is-gapless">
+        <div class="column logo is-4">
+            <img src="{{$.Tenant.Logo}}">
+        </div>
+        <div class="column has-text-right p-1">
+            <div class="text p-4">
+                <h2 class="title is-5">
+                    สำเนาใบเสร็จรับเงิน/สำเนาใบกำกับภาษี
+                    <br>
+                    COPY RECEIVE/COPY TAXINVOICE
+                </h2>
+                <h3 class="subtitle is-5 mb-0">บัญชี</h2>
             </div>
         </div>
     </div>
@@ -72,23 +123,23 @@
         <div class="column">
             <h2 class="title is-5 mb-1">{{$.Tenant.Name}}</h2>
             <p>
-            {{.Tenant.Address1}}<br>
-            {{.Tenant.Address2}}<br>
+                {{.Tenant.Address1}}<br>
+                {{.Tenant.Address2}}<br>
 
-            {{if .Tenant.Telephone}}
-            โทร {{.Tenant.Telephone}}<br>
-            {{end}}
+                {{if .Tenant.Telephone}}
+                โทร {{.Tenant.Telephone}}<br>
+                {{end}}
 
-            เลขประจำตัวผู้เสียภาษี {{$.Tenant.Taxcode}}<br>
+                เลขประจำตัวผู้เสียภาษี {{$.Tenant.Taxcode}}<br>
             </p>
             <h2 class="title is-5 mb-1">Customer / ลูกค้า</h2>
             <p>
-            {{$.Invoice.Customer.Name}}<br>
-            {{$.Invoice.Customer.Address1}}<br>
-            {{$.Invoice.Customer.Address2}}<br>
-            {{if $.Invoice.Customer.Telephone}}
-            โทร {{$.Invoice.Customer.Telephone}}<br>
-            {{end}}
+                {{$.Invoice.Customer.Name}}<br>
+                {{$.Invoice.Customer.Address1}}<br>
+                {{$.Invoice.Customer.Address2}}<br>
+                {{if $.Invoice.Customer.Telephone}}
+                โทร {{$.Invoice.Customer.Telephone}}<br>
+                {{end}}
             </p>
         </div>
         <div class="column is-narrow">
@@ -147,12 +198,12 @@
                     {{$total := var $.Total}}
                     {{range $i, $v := $.Items}}
                     {{if ge $i 15}}
-                        {{break}}
+                    {{break}}
                     {{end}}
                     <tr>
-                        <td class="has-text-right">{{add $i 1}}</td>
+                        <td class="has-text-right">{{add $i $.Offset}}</td>
                         <td class="has-text-right">{{$v.Code}}</td>
-                        <td>{{$v.Description}}</td>
+                        <td class="line-break">{{$v.Description}}</td>
                         <td class="has-text-right">{{$v.Amount}}</td>
                         <td class="has-text-right">{{printDecAsFloat $v.Cost}}</td>
                         <td class="has-text-right">{{printDecAsFloat (mul $v.Amount $v.Cost)}}</td>
@@ -182,34 +233,40 @@
             </table>
         </div>
     </div>
+    {{if or (eq $.Pages $.CurrentPage) (not $.Tenant.MultiplePages )}}
     <div class="columns is-centered has-text-centered m-1">
         <div class="column is-4">
             <hr class="signature">
             <p class="mb-0">
-                ผู้มีอำนาจลงนาม                    
+                ผู้รับของ
+            </p>
+        </div>
+        <div class="column is-2"></div>
+        <div class="column is-4">
+            <hr class="signature">
+            <p class="mb-0">
+                ผู้มีอำนาจลงนาม
             </p>
         </div>
     </div>
-    <div class="columns m-1">
-        <div class="column">
-            <h2 class="title is-6 mb-0">
-                ข้อมูลบัญชีธนาคารเพื่อการโอนเงิน
-            </h2>
-            <p> {{$.Tenant.BankAddress}} </p>
-        </div>
-    </div>
+    {{end}}
 </div>
 {{end}}
 
-{{define "body"}}
+{{define "invoice_body"}}
 <div class="grid">
     {{template "original_invoice" .}}
     {{template "copy_invoice" .}}
 </div>
 <div class="page-break"></div>
 <div class="grid">
-    {{template "copy_invoice" .}}
-    {{template "copy_invoice" .}}
+    {{template "finance_invoice" .}}
+    {{template "accounting_invoice" .}}
 </div>
 <div class="page-break"></div>
+{{end}}
+
+{{define "body"}}
+    {{template "admin" .}}
+    {{template "invoice_body" .}}
 {{end}}

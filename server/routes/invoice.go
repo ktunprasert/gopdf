@@ -19,6 +19,7 @@ type templatePayload struct {
 	CurrentPage int
 	Total       int
 	Offset      int
+	Raw         bool
 }
 
 func InvoiceView(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +45,7 @@ func InvoiceView(w http.ResponseWriter, r *http.Request) {
 	items := invoice.Items
 	if len(items) > 15 {
 		items = items[:15]
-	}
+    } 
 
 	payload := templatePayload{
 		Invoice:     invoice,
@@ -55,6 +56,7 @@ func InvoiceView(w http.ResponseWriter, r *http.Request) {
 		CurrentPage: 1,
 		Total:       0,
 		Offset:      1,
+		Raw:         r.URL.Query().Get("raw") == "true",
 	}
 
 	if tenant.MultiplePages {
@@ -62,8 +64,8 @@ func InvoiceView(w http.ResponseWriter, r *http.Request) {
 	} else {
 		tmpl.ExecuteTemplate(w, "base", payload)
 	}
-
 }
+
 
 func genMultiPageTemplates(tmpl *template.Template, w http.ResponseWriter, payload templatePayload) {
 	tmpl.ExecuteTemplate(w, "base", payload)
@@ -76,10 +78,10 @@ func genMultiPageTemplates(tmpl *template.Template, w http.ResponseWriter, paylo
 			}
 		}
 
-        items := make([]domains.Item, 15)
-        for i, n := range payload.Invoice.Items[(n*15):] {
-            items[i] = n
-        }
+		items := make([]domains.Item, 15)
+		for i, n := range payload.Invoice.Items[(n * 15):] {
+			items[i] = n
+		}
 
 		tmpl.ExecuteTemplate(w, "body", templatePayload{
 			Invoice:     payload.Invoice,
@@ -89,7 +91,7 @@ func genMultiPageTemplates(tmpl *template.Template, w http.ResponseWriter, paylo
 			Pages:       payload.Pages,
 			CurrentPage: n + 1,
 			Total:       total,
-			Offset:      (n*15) +1,
+			Offset:      (n * 15) + 1,
 		})
 
 		n++

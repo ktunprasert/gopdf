@@ -5,6 +5,46 @@
 {{define "body"}}
 <div class="container content">
     <div class="columns">
+        <div class="column is-4">
+            <b>Tenant</b>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>ชื่อ</td>
+                        <td>{{.Tenant.Name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Address 1</td>
+                        <td>{{.Tenant.Address1}}</td>
+                    </tr>
+                    <tr>
+                        <td>Address 2</td>
+                        <td>{{.Tenant.Address2}}</td>
+                    </tr>
+                    <tr>
+                        <td>Telephone</td>
+                        <td>{{.Tenant.Telephone}}</td>
+                    </tr>
+                    <tr>
+                        <td>Taxcode</td>
+                        <td>{{.Tenant.Taxcode}}</td>
+                    </tr>
+                    <tr>
+                        <td>BankAddress</td>
+                        <td>{{.Tenant.BankAddress}}</td>
+                    </tr>
+                    <tr>
+                        <td>Logo</td>
+                        <td><img src="{{.Tenant.Logo}}" alt=""></td>
+                    </tr>
+                    <tr>
+                        <td>MultiplePages</td>
+                        <td>{{.Tenant.MultiplePages}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {{template "form_body" .}}
+        </div>
         <div class="column">
             <p><b>List of invoices</b>
             <ul>
@@ -13,8 +53,7 @@
                 {{end}}
             </ul>
             </p>
-        </div>
-        <div class="column">
+
             <b>New Invoice</b>
             <form method="POST">
                 <div class="field">
@@ -28,13 +67,9 @@
                     <div class="control">
                         <button class="button is-link">Submit</button>
                     </div>
-                    <div class="control">
-                        <button class="button is-link is-light">Cancel</button>
-                    </div>
                 </div>
             </form>
         </div>
-
     </div>
 </div>
 {{end}}
