@@ -31,6 +31,10 @@
     vertical-align: middle;
 }
 
+.order td {
+    height: 15px;
+}
+
 @media all {
     .page-break {
         display: none;

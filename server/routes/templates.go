@@ -3,22 +3,23 @@ package routes
 import (
 	"html/template"
 
+	"github.com/bradfitz/iter"
 	"github.com/joofjang/numgothai"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
 
 type templateVariable struct {
-    Value interface{}
+	Value interface{}
 }
 
 func (v *templateVariable) Set(value interface{}) string {
-    v.Value = value
-    return ""
+	v.Value = value
+	return ""
 }
 
-func newTemplateVariable(initValue interface{}) *templateVariable{
-    return &templateVariable{initValue}
+func newTemplateVariable(initValue interface{}) *templateVariable {
+	return &templateVariable{initValue}
 }
 
 var funcMap = template.FuncMap{
@@ -35,13 +36,14 @@ var funcMap = template.FuncMap{
 		return a / b
 	},
 	"printDecAsFloat": func(a int) string {
-        p := message.NewPrinter(language.English)
-        return p.Sprintf("%.2f", float64(a) / 100)
+		p := message.NewPrinter(language.English)
+		return p.Sprintf("%.2f", float64(a)/100)
 	},
-    "var": newTemplateVariable,
-    "percentage": func(a int, percent float64) int {
-        val := float64(a) * percent
-        return int(val)
-    },
-    "bahtThaiText": numgothai.IntBaht,
+	"var": newTemplateVariable,
+	"percentage": func(a int, percent float64) int {
+		val := float64(a) * percent
+		return int(val)
+	},
+	"bahtThaiText": numgothai.IntBaht,
+	"N":            iter.N,
 }

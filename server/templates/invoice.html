@@ -211,6 +211,18 @@
                     </tr>
                     {{end}}
 
+                     <!-- loop over the leftovers -->
+                     {{range $i, $_ := N (sub 15 (len $.Items))}}
+                    <tr>
+                        <td class="has-text-right"></td>
+                        <td class="has-text-right"></td>
+                        <td class="has-text-right"></td>
+                        <td class="has-text-right"></td>
+                        <td class="has-text-right"></td>
+                        <td class="has-text-right"></td>
+                    </tr>
+                     {{end}}
+
                     {{if or (eq $.Pages $.CurrentPage) (not $.Tenant.MultiplePages )}}
                     <tr>
                         <td colspan="3" rowspan="">{{$.Invoice.Notes}}</td>
