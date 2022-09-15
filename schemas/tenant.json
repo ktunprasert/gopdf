@@ -1,0 +1,48 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "http://localhost:8090/schemas/tenant.json",
+    "title": "GoPDF - Tenant",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "_id": {
+            "description": "The composite unique identifier for an invoice tenant:`tenant_id`, e.g. 'tenant:avocado'",
+            "type": "string"
+        },
+        "_rev": {
+            "description": "CouchDb level attribute used to keep track of version hashing",
+            "type": "string"
+        },
+        "name": {
+            "description": "Tenant's name",
+            "type": "string"
+        },
+        "address1": {
+            "type": "string"
+        },
+        "address2": {
+            "type": "string"
+        },
+        "telephone": {
+            "type": "string"
+        },
+        "taxcode": {
+            "type": "string"
+        },
+        "logo": {
+            "description": "The exact path to logo image",
+            "type": "string"
+        },
+        "backgroundcolor": {
+            "description": "Hexcode for colors used as the PDF background header",
+            "type": "string"
+        },
+        "multiplepages": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "_id",
+        "name"
+    ]
+}

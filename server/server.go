@@ -40,9 +40,11 @@ func (s *Server) setupApiRoutes(router *mux.Router) {
 func (s *Server) setupFileServers(router *mux.Router) {
 	static := http.FileServer(http.Dir("server/static/"))
 	uploads := http.FileServer(http.Dir("uploads"))
+	schemas := http.FileServer(http.Dir("schemas"))
 
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", static))
 	router.PathPrefix("/uploads/").Handler(http.StripPrefix("/uploads/", uploads))
+	router.PathPrefix("/schemas/").Handler(http.StripPrefix("/schemas/", schemas))
 }
 
 func (s *Server) Start() {

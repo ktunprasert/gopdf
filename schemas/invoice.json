@@ -1,0 +1,98 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "http://localhost:8090/schemas/invoice.json",
+    "title": "GoPDF - Invoice",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "_id": {
+            "description": "The composite unique identifier for an invoice `tenant_id:invoice_id`",
+            "type": "string"
+        },
+        "_rev": {
+            "description": "CouchDb level attribute used to keep track of version hashing",
+            "type": "string"
+        },
+        "tenant_id": {
+            "description": "The unique identifier for a tenant",
+            "type": "string"
+        },
+        "invoice_id": {
+            "description": "The unique identifier for a invoice",
+            "type": "string"
+        },
+        "items": {
+            "description": "The list of invoice items",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "integer"
+                    },
+                    "cost": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "code"
+                ]
+            }
+        },
+        "type": {
+            "description": "Invoice Type",
+            "type": "string"
+        },
+        "issued_date": {
+            "description": "Issued Date of the invoice",
+            "type": "string"
+        },
+        "due_date": {
+            "description": "Due Date of the invoice",
+            "type": "string"
+        },
+        "po_number": {
+            "type": "string"
+        },
+        "customer": {
+            "description": "due date of the invoice",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "address1": {
+                    "type": "string"
+                },
+                "address2": {
+                    "type": "string"
+                },
+                "telephone": {
+                    "type": "string"
+                }
+            }
+        },
+        "notes": {
+            "type": "string"
+        },
+        "contact_name": {
+            "type": "string"
+        },
+        "contact_telephone": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "_id",
+        "tenant_id",
+        "invoice_id",
+        "items",
+        "issued_date"
+    ]
+}
