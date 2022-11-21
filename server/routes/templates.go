@@ -2,6 +2,7 @@ package routes
 
 import (
 	"html/template"
+	"math"
 
 	"github.com/bradfitz/iter"
 	"github.com/joofjang/numgothai"
@@ -42,7 +43,7 @@ var funcMap = template.FuncMap{
 	"var": newTemplateVariable,
 	"percentage": func(a int, percent float64) int {
 		val := float64(a) * percent
-		return int(val)
+        return int(math.Round(val))
 	},
 	"bahtThaiText": numgothai.IntBaht,
 	"N":            iter.N,
