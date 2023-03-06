@@ -1,0 +1,68 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/ktunprasert/gopdf/db"
+	"github.com/ktunprasert/gopdf/db/repository"
+	// "github.com/ktunprasert/gopdf/domains"
+)
+
+func main() {
+	os.Setenv("COUCHDB_URL", "http://root:123@localhost:5984")
+	os.Setenv("COUCHDB_TABLE", "store")
+
+	invoiceRepo := repository.NewInvoiceRepository()
+
+	// invoice, err := invoiceRepo.Get("avocado:1")
+	// if err != nil {
+	// 	fmt.Println("get err", err)
+	// 	return
+	// }
+
+	// fmt.Println("invoice found", invoice)
+
+	l, err := invoiceRepo.List("avocado")
+	// t := db.EntityKeyTransformer{}
+	// fmt.Println(t.Transform(l[0]))
+	if err != nil {
+		fmt.Println("list err", err)
+		return
+	}
+
+	// fmt.Println("list of invoices for deez noots", l)
+
+	// newInvoice := &domains.Invoice{
+	// 	Id:        "avocado:420",
+	// 	TenantId:  "avocado",
+	// 	InvoiceId: "420",
+	// 	Items: []domains.Item{
+	// 		{"0001", "Avocado (ผลตภณฑเสรมอาหาร)", 45, 102},
+	// 	},
+	// 	IssuedDate: "01/06/2565",
+	// }
+
+	// err = invoiceRepo.Delete(newInvoice.Id)
+	// if err != nil {
+	// 	fmt.Println("delete err", err)
+	// 	return
+	// }
+
+	// created, err := invoiceRepo.Create(newInvoice)
+	// if err != nil {
+	// 	fmt.Println("create err", err)
+	// 	return
+	// }
+
+	// fmt.Println("Succ ", created)
+
+	// created.IssuedDate = "01/06/2022"
+
+	// updated, err := invoiceRepo.Update(created)
+	// if err != nil {
+	// 	fmt.Println("update err", err)
+	// 	return
+	// }
+	// fmt.Println("updated", updated)
+}

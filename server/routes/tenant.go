@@ -17,6 +17,7 @@ var (
 		"server/templates/tenant.html",
 		"server/templates/base.html",
 		"server/templates/forms/tenant-edit.html",
+		"server/templates/forms/upload-logo.html",
 	}
 )
 
@@ -35,7 +36,7 @@ func TenantView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(invoices)
+	// fmt.Println(invoices)
 
 	extractedKeys := []db.EntityKeyObject{}
 	for _, invoiceCompositeKey := range invoices {

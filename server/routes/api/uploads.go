@@ -6,13 +6,14 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/ktunprasert/gopdf/domains"
 )
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 10 // 10 MB
 
-func HandleUpload(w http.ResponseWriter, r *http.Request) {
+func HandleUpload(filename string, w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
@@ -32,8 +33,15 @@ func HandleUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fileLocation := fmt.Sprintf("./uploads/%s", fileHeader.Filename)
-	dst, err := os.Create(fileLocation)
+	tempFile := fmt.Sprintf("./uploads/%s", fileHeader.Filename)
+
+	if filename != "" {
+		filenameSlice := strings.Split(fileHeader.Filename, ".")
+        fileExtension := filenameSlice[len(filenameSlice)-1]
+
+        tempFile = fmt.Sprintf("./uploads/%s.%s", filename, fileExtension)
+	}
+	dst, err := os.Create(tempFile)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -52,7 +60,7 @@ func HandleUpload(w http.ResponseWriter, r *http.Request) {
 			Success: true,
 			Message: "",
 			Data: map[string]string{
-				"path": fileLocation,
+				"path": tempFile,
 			},
 		},
 	)

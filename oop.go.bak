@@ -1,0 +1,57 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/ktunprasert/gopdf/db/repository"
+)
+
+func main() {
+	os.Setenv("COUCHDB_URL", "http://root:123@localhost:5984")
+	os.Setenv("COUCHDB_TABLE", "store")
+
+	tenantRepo := repository.NewTenantRepository()
+
+	// id := "avocado"
+
+	// t, err := tenantRepo.Get(id)
+	// if err != nil {
+	//     fmt.Println(err)
+	// }
+	// fmt.Println(t)
+
+	l, err := tenantRepo.List()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// fmt.Println(l[0])
+	fmt.Printf("%+v\n", l)
+
+	createTenant := &repository.Tenant{
+		Id:   "tenant:chuck",
+		Name: "Chuck Testa",
+	}
+
+    err = tenantRepo.Delete("tenant:chuck")
+    if err != nil {
+        fmt.Println("delete err", err)
+        return
+    }
+
+	res, err := tenantRepo.Create(createTenant)
+	if err != nil {
+		fmt.Println("err", err)
+	}
+	fmt.Println(res)
+
+    createTenant.Name = "Chuck Testa - the only taxerdermist you need"
+
+    res, err = tenantRepo.Update(createTenant)
+	if err != nil {
+		fmt.Println("err", err)
+	}
+	fmt.Println(res)
+
+}

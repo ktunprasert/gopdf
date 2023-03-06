@@ -1,0 +1,61 @@
+package main
+
+import (
+	// "context"
+	"fmt"
+	"os"
+
+	"github.com/ktunprasert/gopdf/db"
+)
+
+func main() {
+	os.Setenv("COUCHDB_URL", "http://root:123@localhost:5984/")
+	os.Setenv("COUCHDB_TABLE", "store")
+
+	// dbClient := db.NewDB()
+	// res := dbClient.Get(context.TODO(), "tenant:avocado")
+	// defer res.Close()
+
+ //    var tenant *db.Tenant
+
+ //    res.ScanDoc(&tenant)
+ //    tenant.Address1 = "test address 1"
+ //    tenant.Name = "avocado changed from Moo"
+
+ //    rev, err := dbClient.Put(context.TODO(), "tenant:avocado", tenant)
+ //    if err != nil {
+ //        panic(err)
+ //    }
+
+ //    fmt.Println(rev)
+
+	// var t *db.Tenant
+
+ //    err := res.ScanDoc(&t)
+	// if err != nil {
+ //        panic(err)
+	// }
+
+    repo := db.NewTenantRepository()
+    t, err := repo.Get("avocado")
+    if err != nil {
+        panic(err)
+    }
+
+    t.Name = "Avocado is odacova backwards"
+
+    err = repo.Update(t)
+    if err != nil {
+        panic(err)
+    }
+
+    t.Name = "Avocado"
+
+    err = repo.Update(t)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Printf("%+v", t)
+
+}

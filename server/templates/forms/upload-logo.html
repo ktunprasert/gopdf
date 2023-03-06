@@ -1,0 +1,55 @@
+{{define "upload_logo"}}
+<form class="form" id="upload_logo" enctype="multipart/form-data">
+    <div class="file">
+        <label class="file-label">
+            <input id="file" class="file-input" type="file" name="file" accept="image/*">
+            <span class="file-cta">
+                <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                    Choose a file…
+                </span>
+            </span>
+            <span class="file-name">
+                No file selected...
+            </span>
+        </label>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Submit</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#file').on('change', e => {
+        e.preventDefault();
+        const [file] = e.target.files;
+        console.log(file);
+        $("span.file-name").text(file.name);
+    });
+
+    $('#upload_logo').on('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        const payload = Object.fromEntries(data.entries());
+
+        console.log("payload", payload);
+        axios
+            .post('/api/tenant/{{.TenantId}}/logo/', payload, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
+            .then((res) => {
+                location.reload();
+            })
+            .catch((err) => {
+                console.log('err', err);
+            });
+    })
+</script>
+{{end}}

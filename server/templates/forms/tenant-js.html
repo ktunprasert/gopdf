@@ -1,0 +1,89 @@
+{{define "form_body"}}
+<form method="POST" id="create_tenant">
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" name="name" type="text" placeholder="e.g Alex Smith">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Logo</label>
+        <div class="control">
+            <input class="input" name="logo" type="file">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Address1</label>
+        <div class="control">
+            <input class="input" name="address1" type="text">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Address2</label>
+        <div class="control">
+            <input class="input" name="address2" type="text">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Telephone</label>
+        <div class="control">
+            <input class="input" name="telephone" type="text">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Taxcode</label>
+        <div class="control">
+            <input class="input" name="taxcode" type="text">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">BankAddress</label>
+        <div class="control">
+            <input class="input" name="bankaddress" type="text" disabled>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Background Color</label>
+        <div class="control">
+            <input class="input" name="backgroundcolor" type="color">
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="label">
+                <input value="true" name="multiplepages" type="checkbox">
+                Multiple Pages
+            </label>
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Submit</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $("#create_tenant").on("submit", e => {
+        e.preventDefault();
+        console.log(e);
+        const data = new FormData(e.target);
+        const payload = Object.fromEntries(data.entries());
+        if (data.get("multiplepages") === "true") {
+            payload.multiplepages = true;
+        }
+
+        console.log(payload);
+        axios.post("/api/tenant/", payload).then(res => { location.reload() }).catch(err => {console.log("err", err)});
+    });
+</script>
+{{end}}

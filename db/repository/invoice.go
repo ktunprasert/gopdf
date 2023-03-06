@@ -43,7 +43,7 @@ func (repo *InvoiceRepository) Get(id string) (*domains.Invoice, error) {
 func (repo *InvoiceRepository) List(tenantId string) ([]string, error) {
 	var partitionResponse *db.PartitionResponse
 
-    fmt.Println(fmt.Sprintf(TENANT_INVOICE_LIST, tenantId))
+	fmt.Println(fmt.Sprintf(TENANT_INVOICE_LIST, tenantId))
 	err := repo.Client.Fetch(fmt.Sprintf(TENANT_INVOICE_LIST, tenantId), &partitionResponse)
 	if err != nil {
 		return nil, err

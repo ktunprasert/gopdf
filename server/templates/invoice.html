@@ -206,7 +206,7 @@
                         <td class="line-break">{{$v.Description}}</td>
                         <td class="has-text-right">{{$v.Amount}}</td>
                         <td class="has-text-right">{{printDecAsFloat $v.Cost}}</td>
-                        <td class="has-text-right">{{printDecAsFloat (mul $v.Amount $v.Cost)}}</td>
+                        <td class="has-text-right">{{printDecAsFloat $v.Total}}</td>
                         {{$total.Set (add $total.Value (mul $v.Amount $v.Cost))}}
                     </tr>
                     {{end}}
@@ -225,20 +225,30 @@
 
                     {{if or (eq $.Pages $.CurrentPage) (not $.Tenant.MultiplePages )}}
                     <tr>
-                        <td colspan="3" rowspan="">{{$.Invoice.Notes}}</td>
-                        <td colspan="2">รวมเงินสุทธิ</td>
-                        <td class="has-text-right">{{printDecAsFloat $total.Value}}</td>
+                        <td colspan="3" rowspan=""></td>
+                        <td colspan="2">รวมเป็นเงิน</td>
+                        <td class="has-text-right">{{printDecAsFloat $.Invoice.TotalBeforeDiscount}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" rowspan=""></td>
+                        <td colspan="2">ส่วนลด</td>
+                        <td class="has-text-right">{{printDecAsFloat $.Invoice.Discount}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" rowspan=""></td>
+                        <td colspan="2">มูลค่าสินค้ารวมภาษี</td>
+                        <td class="has-text-right">{{printDecAsFloat $.Invoice.Total}}</td>
                     </tr>
                     <tr>
                         <td colspan="3" rowspan="2" class="bahttext has-text-centered">
-                            {{bahtThaiText (percentage $total.Value 1.07)}}
+                            {{bahtThaiText $.Invoice.Total}}
                         </td>
                         <td colspan="2">ภาษีมูลค่าเพิ่ม</td>
-                        <td class="has-text-right">{{printDecAsFloat (percentage $total.Value 0.07)}}</td>
+                        <td class="has-text-right">{{printDecAsFloat $.Invoice.Vat}}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">จำนวนเงินรวมทั้งสิ้น</td>
-                        <td class="has-text-right">{{printDecAsFloat (percentage $total.Value 1.07)}} </td>
+                        <td colspan="2">มูลค่าสินค้า</td>
+                        <td class="has-text-right">{{printDecAsFloat $.Invoice.NoVat}} </td>
                     </tr>
                     {{end}}
                 </tbody>

@@ -25,6 +25,7 @@ func (s *Server) setupApiRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/tenant/{id}/", api.GetTenant).Methods("GET")
 	apiRouter.HandleFunc("/tenant/{id}/", api.DeleteTenant).Methods("DELETE")
 	apiRouter.HandleFunc("/tenant/{id}/", api.UpdateTenant).Methods("PUT")
+	apiRouter.HandleFunc("/tenant/{id}/logo/", api.UploadLogo).Methods("POST")
 	apiRouter.HandleFunc("/tenant/", api.ListTenant).Methods("GET")
 	apiRouter.HandleFunc("/tenant/", api.CreateTenant).Methods("POST")
 	apiRouter.HandleFunc("/tenant/{tenantId}/invoices/", api.ListInvoice).Methods("GET")
@@ -34,7 +35,7 @@ func (s *Server) setupApiRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/invoice/{id}/", api.UpdateInvoice).Methods("PUT")
 	apiRouter.HandleFunc("/invoice/", api.CreateInvoice).Methods("POST")
 
-	apiRouter.HandleFunc("/upload/", api.HandleUpload).Methods("POST")
+	// apiRouter.HandleFunc("/upload/", api.HandleUpload).Methods("POST")
 }
 
 func (s *Server) setupFileServers(router *mux.Router) {
