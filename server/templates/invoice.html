@@ -225,17 +225,15 @@
 
                     {{if or (eq $.Pages $.CurrentPage) (not $.Tenant.MultiplePages )}}
                     <tr>
-                        <td colspan="3" rowspan=""></td>
+                        <td colspan="3" rowspan="3" class="has-text-centered bahttext">{{$.Invoice.Notes}}</td>
                         <td colspan="2">รวมเป็นเงิน</td>
                         <td class="has-text-right">{{printDecAsFloat $.Invoice.TotalBeforeDiscount}}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" rowspan=""></td>
                         <td colspan="2">ส่วนลด</td>
                         <td class="has-text-right">{{printDecAsFloat $.Invoice.Discount}}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" rowspan=""></td>
                         <td colspan="2">มูลค่าสินค้ารวมภาษี</td>
                         <td class="has-text-right">{{printDecAsFloat $.Invoice.Total}}</td>
                     </tr>
