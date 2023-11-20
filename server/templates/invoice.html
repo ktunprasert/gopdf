@@ -140,6 +140,10 @@
                 {{if $.Invoice.Customer.Telephone}}
                 โทร {{$.Invoice.Customer.Telephone}}<br>
                 {{end}}
+
+                {{if $.Invoice.Customer.Taxcode}}
+                เลขประจำตัวผู้เสียภาษี {{$.Invoice.Customer.Taxcode}}<br>
+                {{end}}
             </p>
         </div>
         <div class="column is-narrow">
